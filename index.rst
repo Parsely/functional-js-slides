@@ -59,4 +59,92 @@ It's turtles all the way down!
 .. image:: img/magicturtle.jpg
     :align: center
 
+Writing Real Programs... with JavaScript!?
+------------------------------------------
+
+This was the original name of this talk.
+
+The "!?" was because, when I was starting out in programming, no one considered JavaScript
+a "real" programming language. The truth is, though, that people had the same feelings
+toward Python back then, and how wrong they were.
+
+I have come to realize in the last 2 years that JavaScript is, quite simply, the most
+important programming language to know right now. Ignore and deride it at your own peril.
+
+The Beast with Two Backs
+------------------------
+
+JS is a cool programming language!
+
+.. class:: incremental
+
+        * Functional
+        * Weakly and dynamically typed
+        * Function scope and closure
+        * Has a >99% desktop install base (no kidding!)
+
+JS is not a real programming language!
+
+.. class:: incremental
+
+        * No compilation units, modules and namespaces
+        * No classes or object-orientation built-in
+        * No standard library (no kidding!)
+        * Incoherent implementation standard
+
+JS boring details in one slide
+------------------------------
+
+.. class:: incremental
+
+        Number: double-precision 64-bit IEEE 754, e.g. 0 or 0.5
+        String: stream of 16-bit Unicode characters, e.g. “hello, world!”
+        Boolean: true or false
+        object: {a: b} - like Python dictionary + attribute (dot notation) syntax
+                Function: function() {}
+                Array: [a, b] – implemented as hash, includes length property
+                Date: supports basic date/time representation and parsing from strings
+                RegExp: created using /regex/ syntax; efficient RegEx impl
+        Null: null - deliberate non-value
+        Undefined: undefined  - uninitialized value
+
+.. class:: small
+
+        no I/O – object literals – common C-style if, for, switch/case, while statements – uncommon C-style do/while, tertiary statement, and short-circuiting – var keyword – string concatenation and splicing – prototype chain – toString – type coercion – truthy and falsy – triple-equals (===) vs. double-equals (==) – typeof (broken!)
+
+What makes JavaScript cool?
+---------------------------
+
+Like Python, JavaScript is a small language. It fits in your head.
+
+Like Python, JavaScript is multi-paradigm, but has even more support for functional
+programming than Python.
+
+JavaScript's functional core allows you to build powerful primitives easily, but unlike
+Python, batteries are not included.
+
+Our first example
+-----------------
+
+Our first example is a map/reduce implementation written with JS functions.
+
+.. class:: incremental
+
+        we build an iterator function called each which is found in most JS frameworks
+        we implement map and reduce using each
+        we implement a test function that maps pow2 function (x*x) to each element in a list, and then reduces it via addition.
+
+End result is equivalent to the following Python: sum(x*x for x in items)
+
+The iterator function: each
+---------------------------
+
+.. sourcecode:: javascript
+
+        function each(items, fn) {
+                for (var i = 0; i < items.length; i++) {
+                        var item = items[i];
+                        fn.apply(item, []);
+                }
+        };
 
