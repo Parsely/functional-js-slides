@@ -610,3 +610,383 @@ Act I, Fin
 ----------
 
 This ends our look at the JavaScript language. Now, on to Node.JS.
+
+Node.JS
+-------
+
+.. image:: img/nodejs.png
+    :align: center
+
+Why Server-Side JS?
+-------------------
+
+The Grand Unified Stack: JavaScript front to back, baby.
+
+The rise of Rich Internet Applications (RIAs) has led to a smaller role for servers anyway.
+
+Re-use between client/server (e.g. form validation logic, utilities, object models) may de-duplicate code
+
+Single syntax may reduce programmer context switching
+
+Why has SSJS failed so far?
+---------------------------
+
+Netscape LiveWire
+    * Tied to a commercial vendor
+    * JavaScript was not even adopted yet
+
+Rhino
+    * Open source
+    * No community (identity crisis)
+    * Poor performance
+    * JavaScript was not cool yet
+
+Node.JS: right place, right time
+--------------------------------
+
+And, the right tool.
+
+.. class:: incremental
+
+    * Open source
+    * A library to build HTTP servers
+    * Riding asynchronous wave (epoll)
+    * Riding realtime wave (COMET, Websockets)
+    * A strong community of professional JS hackers
+
+JavaScript has finally been made cool, thanks to AJAX/RIAs, and now Node.JS.
+
+Revenge of JS
+-------------
+
+"Despite JavaScript's astonishing shortcomings, deep down, in its core, it got something
+very right.  JavaScript was the world's most misunderstood programming language. 
+
+Its obvious defects, its unfashionable programming model, intentional mispositioning at
+its introduction, and its ridiculous name caused it to be rejected as unworthy by most
+knowledgeable programmers. But Ajax gave JavaScript a second chance....
+
+It's better to be lucky
+-----------------------
+
+... Because JavaScript is the language of the web browser, and because the web browser has
+become the dominant application delivery system, and because JavaScript isn't too bad,
+JavaScript has become the World's Most Popular Programming Language. Its popularity is
+growing. It is now being embedded in other applications and contexts. JavaScript has
+become important.
+
+It is better to be lucky than smart.”
+
+- Douglas Crockford
+
+Does coolness matter?
+---------------------
+
+Yes, because many programmers are superficial.
+
+.. image:: img/comet-ajax.png
+    :align: center
+
+What Node.JS isn't
+------------------
+
+!== Django/Rails
+
+Pieces of Django/Rails are implemented by npm modules, but no unified web stack yet
+
+!== Rhino/Spidermonkey
+
+Node.JS is one layer up from these (think Python/Ruby standard library, not the interpreter itself).
+
+(But, Node.JS uses a different interpreter, too.)
+
+What Node.JS is
+---------------
+
+A standard library for JavaScript... though still minimal.
+
+An asynchronous server library (epoll, ala Twisted, Tornado, EventMachine)
+
+Because programmable async servers were the reason Node.JS was written, its standard
+library has an async bent.
+
+Node.JS Architecture
+--------------------
+
+.. image:: img/nodejs-stack.png
+   :align: center 
+
+OK, but what is Node.JS, really?
+--------------------------------
+
+It’s clear devs want it to become as powerful as Django/Rails for web app development
+
+.. class:: incremental
+
+        express module is starting to provide routing and controllers
+        mongodb and redis are popular data stores for Node
+        template languages are ported every day 
+
+The promise
+-----------
+
+Maybe Node.JS can simplify the web stack.
+
+.. class:: incremental
+
+        Simplify the backend with JSON-based, async write/read data stores
+        Simplify the middle tier with clientside / serverside code sharing.
+        Simplify the frontend, with server-backed data bindings
+        Simplify deployment, since Node.JS runs directly in production.
+
+Intro to epoll: 10k problem
+---------------------------
+
+.. image:: 10k-problem.png
+    :align: center
+
+Nginx vs. Apache
+----------------
+
+.. image:: nginx-vs-apache.png
+    :align: center
+
+Nginx and Node
+--------------
+
+.. image:: img/nginx-loves-node.png
+    :align: center
+
+I/O costs
+---------
+
+.. image:: img/io-costs.png
+    :align: center
+
+Intro to Node.JS coding
+-----------------------
+
+Now that we understand why Node.JS is important, let's take a look at some examples of
+creating Node.JS HTTP servers.
+
+HTTP Hello, World
+-----------------
+
+.. sourcecode:: javascript
+
+        var http = require('http');
+        var server = http.createServer(function(req, rsp) {
+            rsp.writeHead(200, {"Content-Type": "text/plain"});
+            rsp.end("Hello World\n");
+        });
+        server.listen(8000);
+        console.log("Server running at :8000");
+
+Express Hello, World
+--------------------
+
+.. sourcecode:: javascript
+
+        var app = require('express').createServer()
+
+        app.get('/', function(req, rsp) {
+            rsp.writeHead(200, {"Content-Type": "text/plain"});
+            rsp.end("Hello World\n");
+        });
+        app.listen(8000);
+        console.log("Server running at :8000");
+
+UNIX Hello, World
+-----------------
+
+.. sourcecode:: javascript
+
+        var fs = require('fs');
+        var lazy = require('lazy');
+        lazy(fs.createReadStream("/usr/share/dict/words"))
+            .lines
+            .forEach(function(line) {
+                var line = line.toString();
+                if (line.indexOf("hello") !== -1 
+                   || line.indexOf("world") !== -1) {
+                    console.log(line);
+                }
+            });
+
+Client/Server Hello, World
+--------------------------
+
+.. sourcecode:: javascript
+
+        var 
+        html = require('fs’).readFileSync(…),
+        srv = require('http’).createServer(function(req, res){
+          res.end(html);
+        });
+        server.listen(8080);
+
+        var nowjs = require("now");
+        var everyone = nowjs.initialize(server);
+
+        everyone.now.distributeMessage = function(message){
+          everyone.now.receiveMessage(this.now.name, message);
+        };
+
+Client/Server Hello, World
+--------------------------
+
+.. sourcecode:: javascript
+
+        $(function() {
+          now.receiveMessage = function(name, message) {
+            $("#messages")
+            .append("<br>" + name + ": " + message);
+          };
+          $("#send-button").click(function() {
+            now.distributeMessage("Hello, world");
+          });
+          now.name = prompt("What's your name?", "");
+        });
+
+Notice a trend?
+---------------
+
+.. class:: incremental
+
+        Node.JS relies heavily on what you might call the Hollywood Principle
+        "Don’t call us, we’ll call you"
+        Node.JS achieves this through a heavy use of callbacks and errbacks
+        Luckily, we now know Functional JS!
+
+Why callbacks?
+--------------
+
+.. class:: incremental
+
+        In Node.JS, everything runs in parallel, except your code.
+        Let's say you register two callbacks in Express.
+        Node.JS registers those callbacks, and goes to sleep.
+        Request comes in, dispatches it to callback – meanwhile, any other requests wait in line.
+        As long as your callback doesn’t block, performance is guaranteed.
+
+OK, let's break it
+------------------
+
+Let’s see what actually happens if one of our callbacks takes a long time to respond.
+
+Broken World
+------------
+
+.. sourcecode:: javascript
+
+        var app = require('express').createServer()
+        var i = 1;
+
+        app.get('/', function(req, rsp) {
+            if (i === 3) {
+                console.log("spin needlessly");
+                while (1) {}
+            }
+            rsp.writeHead(200, {"Content-Type": "text/plain"});
+            rsp.end("Hello World " + i + "\n");
+            i++;
+        });
+        app.listen(8000);
+        console.log("Server running at :8000");
+
+What's going on?
+----------------
+
+.. class:: incremental
+
+    On request 1, we get a nice "Hello World 1" message.
+
+    On request 2, same thing.
+
+    But on request 3, we have an infinite loop.
+
+    In a normal, threaded web application, this might make your server spin, but it
+    wouldn't prevent other requests from coming in.
+
+    In Node, however, we have just *hosed the entire server*.
+
+What about Real World?
+----------------------
+
+There is a Node.JS sweet spot right now: Real-time Analytics
+
+Why?
+
+.. class:: incremental
+
+        Low latency, high concurrency HTTP/UDP
+        JSON is a natural fit for data exchange
+        Client-side “pixel” can be synced w/ server-side pixel parser
+        Websockets natural fit for viewing live data
+        MongoDB a natural fit for data store
+        We’ll look at three examples.
+
+Hummingbird
+-----------
+
+.. image:: img/hummingbird.png
+    :align: center
+
+Cube
+----
+
+.. image:: img/cube.png
+    :align: center
+
+StatsD
+------
+
+.. image:: img/statsd.png
+    :align: center
+
+Parse.ly Real World Use Case
+----------------------------
+
+Parse.ly uses Node.JS for what we call "dynamic JavaScript configuration"
+
+.. class:: incremental
+
+        Client-side JavaScript code makes a JSON-P call to a “config server”, which
+        returns JavaScript configuration settings, and handles third-party cookie'ing
+
+        Allows us to load custom JS for individual publishers, or even individuals
+
+        Run A/B tests, do sampling, etc.
+
+        It’s perfect for this (esp. with Redis)
+
+My eye is also on Node.IO
+-------------------------
+
+Web crawling framework built with Node
+Supports full CSS selectors
+Best DOM comprehension possible with JavaScript
+No more "real world HTML" and "valid XHTML" mismatch problems
+Evented system fits nicely. I use Scrapy in the Python world for this now.
+
+More use cases every day
+------------------------
+
+Chat applications
+Collaboration tools
+JSON API servers
+Telephony systems
+
+ACT II, Fin
+-----------
+
+That’s it, a whirlwind tour through old and weary functional JavaScript and its ambitious
+younger brother, Node.JS.
+
+Follow me and get in touch!
+---------------------------
+
+twitter:  @amontalenti
+google+:  gplus.to/amontalenti
+linkedin: linkedin.com/in/andrewmontalenti
+my blog:  http://pixelmonkey.org
