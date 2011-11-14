@@ -101,10 +101,10 @@ JS boring details in one slide
         String: stream of 16-bit Unicode characters, e.g. “hello, world!”
         Boolean: true or false
         object: {a: b} - like Python dictionary + attribute (dot notation) syntax
-                Function: function() {}
-                Array: [a, b] – implemented as hash, includes length property
-                Date: supports basic date/time representation and parsing from strings
-                RegExp: created using /regex/ syntax; efficient RegEx impl
+        Function: function() {}
+        Array: [a, b] – implemented as hash, includes length property
+        Date: supports basic date/time representation and parsing from strings
+        RegExp: created using /regex/ syntax; efficient RegEx impl
         Null: null - deliberate non-value
         Undefined: undefined  - uninitialized value
 
@@ -363,9 +363,9 @@ CROCKFORD IMAGE.
 JavaScript OO vs. Java OO
 -------------------------
 
-“Java is to JavaScript what
-      Car is to Carpet.”
-- Chris Heilmann
+"Java is to JavaScript what
+Car is to Carpet."
+-Chris Heilmann
 
 Classical stack
 ---------------
@@ -577,10 +577,10 @@ No standard library, though
 
         JavaScript desperately needs a standard library
         Heavy development is underway to achieve this:
-                chironjs / narwhal
-                CommonJS
-                ECMAScript standard
-                For server-side, Node.JS
+        chironjs / narwhal
+        CommonJS
+        ECMAScript standard
+        For server-side, Node.JS
 
 My pragmatic clientside stack
 -----------------------------
